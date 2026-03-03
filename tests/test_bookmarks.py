@@ -8,14 +8,14 @@ def test_get_bookmarks():
     response = client.get("/bookmarks")
     assert response.status_code == 200
     data = response.json()
-    assert "bookmarks" in data
-    assert isinstance(data["bookmarks"], list)
+    assert "data" in data
+    assert isinstance(data["data"], list)
 
 def test_bookmarks_structure():
     """Test that each bookmark has the expected fields and types"""
     response = client.get("/bookmarks")
     data = response.json()
-    bookmarks = data["bookmarks"]
+    bookmarks = data["data"]
     
     # Skip test if no bookmarks exist
     if not bookmarks:
@@ -37,7 +37,7 @@ def test_bookmark_status_values():
     """Test that bookmark status values are valid"""
     response = client.get("/bookmarks")
     data = response.json()
-    bookmarks = data["bookmarks"]
+    bookmarks = data["data"]
     
     valid_statuses = {"active", "archived", "pending"}
     for bookmark in bookmarks:

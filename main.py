@@ -1,5 +1,17 @@
 from fastapi import FastAPI
 from datetime import datetime
+from pydantic import BaseModel
+from typing import List
+
+# Pydantic models for response schema
+class Bookmark(BaseModel):
+    id: int
+    country: str
+    status: str
+    timestamp: str
+
+class BookmarkResponse(BaseModel):
+    data: List[Bookmark]
 
 # Mock data for bookmarks
 bookmarks = [
@@ -45,9 +57,9 @@ async def root():
 async def health():
     return {"status": "healthy"}
 
-@app.get("/bookmarks")
+@app.get("/bookmarks", response_model=BookmarkResponse)
 async def get_bookmarks():
-    return {"bookmarks": bookmarks}
+    return {"data": bookmarks}
 
 if __name__ == "__main__":
     import uvicorn
