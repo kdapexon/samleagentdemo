@@ -1,0 +1,5 @@
+{
+    "data_dir": "./data",
+    "output_format": "json",
+    "debug": true
+}
