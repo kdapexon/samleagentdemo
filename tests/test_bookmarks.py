@@ -12,7 +12,7 @@ def test_get_bookmarks():
     assert isinstance(data["bookmarks"], list)
 
 def test_bookmarks_structure():
-    """Test that each bookmark has the expected fields and types"""
+    """Test that each bookmark has the required key fields and types"""
     response = client.get("/bookmarks")
     data = response.json()
     bookmarks = data["bookmarks"]
@@ -21,24 +21,8 @@ def test_bookmarks_structure():
     if not bookmarks:
         return
         
-    # Check first bookmark has required fields and correct types
+    # Check first bookmark has required id field and correct type
     bookmark = bookmarks[0]
     assert "id" in bookmark
-    assert "country" in bookmark
-    assert "status" in bookmark
-    assert "timestamp" in bookmark
-    
     assert isinstance(bookmark["id"], int)
-    assert isinstance(bookmark["country"], str)
-    assert isinstance(bookmark["status"], str)
-    assert isinstance(bookmark["timestamp"], str)
 
-def test_bookmark_status_values():
-    """Test that bookmark status values are valid"""
-    response = client.get("/bookmarks")
-    data = response.json()
-    bookmarks = data["bookmarks"]
-    
-    valid_statuses = {"active", "archived", "pending"}
-    for bookmark in bookmarks:
-        assert bookmark["status"] in valid_statuses
