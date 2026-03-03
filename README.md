@@ -29,6 +29,27 @@ The service will be available at http://localhost:8000
 
 - `/`: Root endpoint, returns "Hello World" message
 - `/health`: Health check endpoint, returns service status
+- `/bookmarks`: Returns a list of bookmarks with their status
+
+### Bookmarks Endpoint
+
+The `/bookmarks` endpoint returns a JSON array of bookmark objects. Each bookmark contains:
+- `url`: The bookmarked URL
+- `title`: Title of the bookmark
+- `status`: Current status (e.g., "active", "archived")
+- `created_at`: Timestamp of when the bookmark was created
+
+Example response:
+```json
+[
+  {
+    "url": "https://example.com",
+    "title": "Example Site",
+    "status": "active",
+    "created_at": "2026-03-01T10:00:00Z"
+  }
+]
+```
 
 ## API Documentation
 
