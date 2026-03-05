@@ -29,27 +29,129 @@ The service will be available at http://localhost:8000
 
 - `/`: Root endpoint, returns "Hello World" message
 - `/health`: Health check endpoint, returns service status
-- `/bookmarks`: Returns a list of bookmarks with their status
+- `GET /bookmarks`: Returns a list of all bookmarks
+- `POST /bookmark`: Creates a new bookmark
+- `GET /bookmark/{bookmark_id}`: Retrieves a specific bookmark by ID
+- `DELETE /bookmark/{bookmark_id}`: Deletes a specific bookmark by ID
 
-### Bookmarks Endpoint
+### GET /bookmarks
 
-The `/bookmarks` endpoint returns a JSON array of bookmark objects. Each bookmark contains:
-- `url`: The bookmarked URL
-- `title`: Title of the bookmark
-- `status`: Current status (e.g., "active", "archived")
-- `created_at`: Timestamp of when the bookmark was created
+Returns a list of all bookmarks with their details.
 
-Example response:
+**Response:**
 ```json
-[
-  {
-    "url": "https://example.com",
-    "title": "Example Site",
-    "status": "active",
-    "created_at": "2026-03-01T10:00:00Z"
+{
+  "success": true,
+  "message": "Bookmarks retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "country": "Japan",
+      "status": "active",
+      "timestamp": "2026-02-15T14:30:00"
+    }
+  ],
+  "metadata": {
+    "total": 1,
+    "page": 1,
+    "per_page": 10
   }
-]
+}
 ```
+
+### POST /bookmark
+
+Creates a new bookmark entry.
+
+**Request Body:**
+```json
+{
+  "country": "Spain",
+  "status": "active"
+}
+```
+
+**Validation Rules:**
+- `country`: Must be 1-100 characters, contain only letters, spaces, and hyphens, and start with an uppercase letter
+- `status`: Must be one of: "active", "archived", or "pending"
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Bookmark created successfully",
+  "data": [
+    {
+      "id": 6,
+      "country": "Spain",
+      "status": "active",
+      "timestamp": "2026-03-05T10:30:00"
+    }
+  ],
+  "metadata": {
+    "total": 6,
+    "page": 1,
+    "per_page": 1
+  }
+}
+```
+
+### GET /bookmark/{bookmark_id}
+
+Retrieves a specific bookmark by its ID.
+
+**Parameters:**
+- `bookmark_id` (path): Integer ID of the bookmark (must be positive)
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Bookmark retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "country": "Japan",
+      "status": "active",
+      "timestamp": "2026-02-15T14:30:00"
+    }
+  ],
+  "metadata": {
+    "total": 1,
+    "page": 1,
+    "per_page": 1
+  }
+}
+```
+
+**Error Responses:**
+- `400`: Invalid bookmark ID (must be positive integer)
+- `404`: Bookmark not found
+
+### DELETE /bookmark/{bookmark_id}
+
+Deletes a specific bookmark by its ID.
+
+**Parameters:**
+- `bookmark_id` (path): Integer ID of the bookmark to delete (must be positive)
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Bookmark with ID 1 deleted successfully",
+  "deleted_bookmark": {
+    "id": 1,
+    "country": "Japan",
+    "status": "active",
+    "timestamp": "2026-02-15T14:30:00"
+  }
+}
+```
+
+**Error Responses:**
+- `400`: Invalid bookmark ID (must be positive integer)
+- `404`: Bookmark not found
 
 ## API Documentation
 
