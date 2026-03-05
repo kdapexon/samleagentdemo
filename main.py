@@ -148,7 +148,7 @@ async def create_bookmark(bookmark: BookmarkCreate):
         "timestamp": datetime.now().isoformat()
     }
     bookmarks.append(new_bookmark)
-    
+
     return {
         "success": True,
         "message": "Bookmark created successfully",
@@ -158,6 +158,62 @@ async def create_bookmark(bookmark: BookmarkCreate):
             "page": 1,
             "per_page": 1
         }
+    }
+
+@app.get("/bookmark/{bookmark_id}")
+async def get_bookmark(bookmark_id: int):
+    # Validate bookmark ID
+    if bookmark_id <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Bookmark ID must be a positive integer"
+        )
+
+    # Find the bookmark with the given ID
+    bookmark = next((b for b in bookmarks if b["id"] == bookmark_id), None)
+
+    if bookmark is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Bookmark with ID {bookmark_id} not found"
+        )
+
+    return {
+        "success": True,
+        "message": "Bookmark retrieved successfully",
+        "data": [bookmark],
+        "metadata": {
+            "total": 1,
+            "page": 1,
+            "per_page": 1
+        }
+    }
+
+@app.delete("/bookmark/{bookmark_id}")
+async def delete_bookmark(bookmark_id: int):
+    # Validate bookmark ID
+    if bookmark_id <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Bookmark ID must be a positive integer"
+        )
+
+    # Find the bookmark with the given ID
+    bookmark_index = next((i for i, b in enumerate(bookmarks) if b["id"] == bookmark_id), None)
+
+    if bookmark_index is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Bookmark with ID {bookmark_id} not found"
+        )
+
+    # Remove the bookmark from the list
+    deleted_bookmark = bookmarks.pop(bookmark_index)
+
+    return {
+        "status": "success",
+        "message": f"Bookmark with ID {bookmark_id} deleted successfully",
+        "deleted_bookmark": deleted_bookmark
     }
 
 if __name__ == "__main__":
